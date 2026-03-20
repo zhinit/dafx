@@ -1,3 +1,0 @@
-/Users/hookline/coding/projects/dafx/dsp/build/CMakeFiles/dsp-wasm.dir
-/Users/hookline/coding/projects/dafx/dsp/build/CMakeFiles/edit_cache.dir
-/Users/hookline/coding/projects/dafx/dsp/build/CMakeFiles/rebuild_cache.dir
