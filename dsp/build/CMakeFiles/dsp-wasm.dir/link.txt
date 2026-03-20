@@ -1,0 +1,1 @@
+/Users/hookline/SDKs/emsdk/upstream/emscripten/em++ --bind @CMakeFiles/dsp-wasm.dir/objects1.rsp -o /Users/hookline/coding/projects/dafx/frontend/public/dsp-emscripten-glue.js

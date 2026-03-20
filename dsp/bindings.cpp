@@ -6,10 +6,12 @@
 class Oscillator
 {
 public:
-  void process(float* output)
+  void process(uintptr_t outputPtr)
   {
     if (!isPlaying_)
       return;
+
+    float* output = reinterpret_cast<float*>(outputPtr);
 
     for (size_t i = 0; i < blockSize_; ++i) {
       output[i] = std::sin(tau_ * freq_ * phase_);
@@ -32,7 +34,7 @@ private:
 
 EMSCRIPTEN_BINDINGS(dsp_module)
 {
-  class_<Oscillator>("Oscillator")
+  emscripten::class_<Oscillator>("Oscillator")
     .constructor()
     .function("setIsPlaying", &Oscillator::setIsPlaying)
     .function("process", &Oscillator::process);
