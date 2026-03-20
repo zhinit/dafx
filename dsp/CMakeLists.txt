@@ -5,7 +5,17 @@ set (CMAKE_CXX_STANDARD 20)
 
 add_executable(dsp-wasm bindings.cpp)
 
-target_link_options(dsp-wasm PRIVATE --bind)
+target_link_options(
+  dsp-wasm
+  PRIVATE
+    --bind
+    -sMODULARIZE=1
+    -sEXPORT_NAME=createDSPModule
+    -sEXPORTED_FUNCTIONS=_malloc,_free
+    -sEXPORTED_RUNTIME_METHODS=HEAPF32
+    "SHELL:-sSINGLE_FILE=1"
+    -O2
+  )
 
 set_target_properties(
   dsp-wasm
