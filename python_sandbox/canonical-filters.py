@@ -3,7 +3,7 @@ import soundfile as sf
 import matplotlib.pyplot as plt
 
 f_s = 44_100
-freq = 440
+freq = 220
 file_length = 2.0
 total_samples = int(f_s * file_length)
 time = np.arange(total_samples) / f_s
