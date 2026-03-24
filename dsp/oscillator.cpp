@@ -1,10 +1,15 @@
+#include "./filters.cpp"
 #include <cmath>
 #include <numbers>
 
 class Oscillator
 {
 public:
-  void prepare(float sampleRate) { sampleRate_ = sampleRate; }
+  void prepare(float sampleRate)
+  {
+    sampleRate_ = sampleRate;
+    filter_.prepare(sampleRate_);
+  }
 
   void process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize)
   {
@@ -29,22 +34,7 @@ public:
         phase_ -= 1.0f;
     }
 
-    filter(left, right, blockSize, 500.0f);
-  }
-
-  void filter(float* left, float* right, size_t blockSize, float cutoff)
-  {
-    float x_h[blockSize];
-    float k = std::tan(pi * cutoff / sampleRate_);
-    float b_0 = k / (k + 1);
-    float b_1 = b_0;
-    float a_1 = (k - 1) / (k + 1);
-    for (size_t i = 0; i < blockSize; ++i) {
-      x_h[i] = left[i] - a_1 * xhPrev_;
-      left[i] = b_0 * x_h[i] + b_1 * xhPrev_;
-      right[i] = left[i];
-      xhPrev_ = x_h[i];
-    }
+    filter_.applyFilter(left, right, blockSize, 500.0f);
   }
 
   void setIsPlaying(bool isPlaying) { isPlaying_ = isPlaying; }
@@ -60,4 +50,6 @@ private:
 
   float pi = std::numbers::pi_v<float>;
   float tau_ = 2.0f * pi;
+
+  CanonicalFilter filter_;
 };
