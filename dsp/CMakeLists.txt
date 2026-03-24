@@ -3,7 +3,7 @@ project(dafx VERSION 0.0.1)
 
 set (CMAKE_CXX_STANDARD 20)
 
-add_executable(dsp-wasm bindings.cpp)
+add_executable(dsp-wasm bindings.cpp oscillator.cpp)
 
 target_link_options(
   dsp-wasm

@@ -10,12 +10,15 @@ class DSPProcessor extends AudioWorkletProcessor {
 
   async handleMessage(data) {
     if (data.type === "init") {
-      const fn = new Function(data.emscriptenGlue + "; return createDSPModule;");
+      const fn = new Function(
+        data.emscriptenGlue + "; return createDSPModule;",
+      );
       const createDSPModule = fn();
       const module = await createDSPModule();
       this.module = module;
       this.engine = new module.Oscillator();
       this.engine.prepare(sampleRate);
+      this.port.postMessage({ type: "ready" });
       return;
     }
 
@@ -42,10 +45,18 @@ class DSPProcessor extends AudioWorkletProcessor {
       this.heapBufferRight = this.module._malloc(numSamples * 4);
     }
 
-    this.engine.process(this.heapBufferLeft, this.heapBufferRight);
+    this.engine.process(this.heapBufferLeft, this.heapBufferRight, 128);
 
-    const wasmLeft = new Float32Array(this.module.HEAPF32.buffer, this.heapBufferLeft, numSamples);
-    const wasmRight = new Float32Array(this.module.HEAPF32.buffer, this.heapBufferRight, numSamples);
+    const wasmLeft = new Float32Array(
+      this.module.HEAPF32.buffer,
+      this.heapBufferLeft,
+      numSamples,
+    );
+    const wasmRight = new Float32Array(
+      this.module.HEAPF32.buffer,
+      this.heapBufferRight,
+      numSamples,
+    );
 
     leftOutput.set(wasmLeft);
     rightOutput.set(wasmRight);

@@ -22,6 +22,13 @@ function App() {
     audioWorklet.connect(audioContext.destination);
 
     audioWorklet.port.postMessage({ type: "init", emscriptenGlue });
+    await new Promise<void>((resolve) => {
+      audioWorklet.port.onmessage = (e) => {
+        if (e.data.type === "ready") {
+          resolve();
+        }
+      };
+    });
 
     audioContextRef.current = audioContext;
     workletNodeRef.current = audioWorklet;
