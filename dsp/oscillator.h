@@ -19,7 +19,5 @@ private:
   float phase_ = 0;
   bool isPlaying_ = false;
 
-  float xhPrev_ = 0.0f;
-
   CanonicalFilter filter_;
 };

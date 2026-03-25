@@ -10,6 +10,6 @@ public:
   void applyFilter(float* left, float* right, size_t blockSize, float cutoff);
 
 private:
-  float sampleRate_;
-  float xhPrev_;
+  float sampleRate_ = 44100.0f;
+  float xhPrev_ = 0.0f;
 };
