@@ -31,7 +31,7 @@ Oscillator::process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize)
       phase_ -= 1.0f;
   }
 
-  filter_.applyFilter(left, right, blockSize, 350.0f);
+  filter_.applyFilter(left, right, blockSize, 350.0f, 0.707, LP);
 }
 
 void

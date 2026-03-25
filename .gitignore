@@ -1,3 +1,4 @@
 /dsp/build
+/dsp/.cache
 /python_sandbox/.venv
 
