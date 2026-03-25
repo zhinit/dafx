@@ -14,6 +14,7 @@ public:
   void setFreq(float freq);
   void setCutoffFreq(float freq);
   void setQ(float q);
+  void setFilterType(FilterType filterType);
 
 private:
   float sampleRate_ = 44'100.0f;
@@ -24,4 +25,5 @@ private:
   CanonicalFilter filter_;
   float cutoffFreq_ = 350.0f;
   float q_ = 0.707f;
+  FilterType filterType_;
 };

@@ -75,6 +75,15 @@ function App() {
     });
   };
 
+  const handleFilterSelect = (e) => {
+    const newFilterType = e.target?.value;
+    setFilterType(newFilterType);
+    workletNodeRef.current?.port.postMessage({
+      type: "setFilterType",
+      value: newFilterType,
+    });
+  };
+
   return (
     <div className="container">
       <button className="test-button" onPointerDown={handlePlay}>
@@ -97,7 +106,7 @@ function App() {
         onInput={handleQSlider}
       />
       <label htmlFor="filter-slider">Q</label>
-      <select className="filter-select">
+      <select className="filter-select" onChange={handleFilterSelect}>
         <option value="LP">Low Pass</option>
         <option value="HP">High Pass</option>
         <option value="BP">Band Pass</option>

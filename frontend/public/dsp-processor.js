@@ -34,6 +34,9 @@ class DSPProcessor extends AudioWorkletProcessor {
       case "setQ":
         this.engine.setQ(data.value);
         break;
+      case "setFilterType":
+        this.engine.setFilterType(this.module.FilterType[data.value]);
+        break;
     }
   }
 
