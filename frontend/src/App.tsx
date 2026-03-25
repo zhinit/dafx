@@ -1,8 +1,13 @@
 import { useState, useRef } from "react";
 import "./App.css";
 
+type FilterType = "LP" | "HP" | "BP" | "BR" | "AP";
+
 function App() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [freq, setFreq] = useState<number>(350.0);
+  const [q, setQ] = useState<number>(0.707);
+  const [filterType, setFilterType] = useState<FilterType>("LP");
   const audioContextRef = useRef<AudioContext | null>(null);
   const workletNodeRef = useRef<AudioWorkletNode | null>(null);
 
@@ -52,12 +57,27 @@ function App() {
     });
   };
 
+  const handleFreqSlider = (e) => {
+    const newFreq = e.target?.value;
+    setFreq(newFreq);
+    workletNodeRef.current?.port.postMessage({
+      type: "setFreq",
+      value: newFreq,
+    });
+  };
+
   return (
     <div className="container">
       <button className="test-button" onPointerDown={handlePlay}>
         play/pause
       </button>
-      <input type="range" className="filter-slider" min="0" max="10000" />
+      <input
+        type="range"
+        className="filter-slider"
+        min="0"
+        max="10000"
+        onInput={handleFreqSlider}
+      />
       <label htmlFor="filter-slider">frequency</label>
       <input type="range" className="filter-slider" min="0" max="10000" />
       <label htmlFor="filter-slider">Q</label>

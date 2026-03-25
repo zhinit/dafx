@@ -12,6 +12,7 @@ public:
 
   void setIsPlaying(bool isPlaying);
   void setFreq(float freq);
+  void setCutoffFreq(float freq);
 
 private:
   float sampleRate_ = 44'100.0f;
@@ -20,4 +21,5 @@ private:
   bool isPlaying_ = false;
 
   CanonicalFilter filter_;
+  float cutoffFreq_ = 350.0f;
 };
