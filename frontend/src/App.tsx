@@ -55,8 +55,19 @@ function App() {
   return (
     <div className="container">
       <button className="test-button" onPointerDown={handlePlay}>
-        Test
+        play/pause
       </button>
+      <input type="range" className="filter-slider" min="0" max="10000" />
+      <label htmlFor="filter-slider">frequency</label>
+      <input type="range" className="filter-slider" min="0" max="10000" />
+      <label htmlFor="filter-slider">Q</label>
+      <select className="filter-select">
+        <option value="LP">Low Pass</option>
+        <option value="HP">High Pass</option>
+        <option value="BP">Band Pass</option>
+        <option value="BR">Band Reject</option>
+        <option value="AP">All Pass</option>
+      </select>
     </div>
   );
 }
