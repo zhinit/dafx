@@ -1,4 +1,4 @@
-#include "oscillator.cpp"
+#include "oscillator.h"
 #include <emscripten/bind.h>
 
 EMSCRIPTEN_BINDINGS(dsp_module)
