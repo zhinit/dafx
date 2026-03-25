@@ -31,7 +31,7 @@ Oscillator::process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize)
       phase_ -= 1.0f;
   }
 
-  filter_.applyFilter(left, right, blockSize, cutoffFreq_, 0.707, LP);
+  filter_.applyFilter(left, right, blockSize, cutoffFreq_, q_, LP);
 }
 
 void
@@ -50,4 +50,10 @@ void
 Oscillator::setCutoffFreq(float freq)
 {
   cutoffFreq_ = freq;
+}
+
+void
+Oscillator::setQ(float q)
+{
+  q_ = q;
 }

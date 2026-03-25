@@ -66,6 +66,15 @@ function App() {
     });
   };
 
+  const handleQSlider = (e) => {
+    const newQ = e.target?.value;
+    setQ(newQ);
+    workletNodeRef.current?.port.postMessage({
+      type: "setQ",
+      value: newQ,
+    });
+  };
+
   return (
     <div className="container">
       <button className="test-button" onPointerDown={handlePlay}>
@@ -79,7 +88,14 @@ function App() {
         onInput={handleFreqSlider}
       />
       <label htmlFor="filter-slider">frequency</label>
-      <input type="range" className="filter-slider" min="0" max="10000" />
+      <input
+        type="range"
+        className="filter-slider"
+        min="0.3"
+        max="3"
+        step="0.01"
+        onInput={handleQSlider}
+      />
       <label htmlFor="filter-slider">Q</label>
       <select className="filter-select">
         <option value="LP">Low Pass</option>

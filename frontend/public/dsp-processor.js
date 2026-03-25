@@ -31,6 +31,9 @@ class DSPProcessor extends AudioWorkletProcessor {
       case "setFreq":
         this.engine.setCutoffFreq(data.value);
         break;
+      case "setQ":
+        this.engine.setQ(data.value);
+        break;
     }
   }
 
