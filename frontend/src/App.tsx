@@ -57,8 +57,14 @@ function App() {
     });
   };
 
+  const convertAmtToFreq = (amt: number) => {
+    // note 10^(4.3 * 1) ~= 20,000Hz
+    // 10^(4.3 * 0) = 1Hz
+    return 10 ** (amt * 4.3);
+  };
+
   const handleFreqSlider = (e) => {
-    const newFreq = e.target?.value;
+    const newFreq = convertAmtToFreq(e.target?.value);
     setFreq(newFreq);
     workletNodeRef.current?.port.postMessage({
       type: "setFreq",
@@ -92,8 +98,9 @@ function App() {
       <input
         type="range"
         className="filter-slider"
-        min="0"
-        max="10000"
+        min="0.0"
+        max="1.0"
+        step="0.001"
         onInput={handleFreqSlider}
       />
       <label htmlFor="filter-slider">frequency</label>
