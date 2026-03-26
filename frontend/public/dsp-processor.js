@@ -26,6 +26,7 @@ class DSPProcessor extends AudioWorkletProcessor {
 
     switch (data.type) {
       case "setIsPlaying":
+        this.engine.resetFilter();
         this.engine.setIsPlaying(data.value);
         break;
       case "setFreq":

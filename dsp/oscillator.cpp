@@ -63,3 +63,9 @@ Oscillator::setFilterType(FilterType filterType)
 {
   filterType_ = filterType;
 }
+
+void
+Oscillator::resetFilter()
+{
+  filter_.reset();
+}

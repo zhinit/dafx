@@ -16,5 +16,6 @@ EMSCRIPTEN_BINDINGS(dsp_module)
     .function("process", &Oscillator::process)
     .function("setCutoffFreq", &Oscillator::setCutoffFreq)
     .function("setQ", &Oscillator::setQ)
-    .function("setFilterType", &Oscillator::setFilterType);
+    .function("setFilterType", &Oscillator::setFilterType)
+    .function("resetFilter", &Oscillator::resetFilter);
 }

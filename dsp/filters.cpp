@@ -39,6 +39,13 @@ CanonicalFilter::applyFilter(float* left,
 }
 
 void
+CanonicalFilter::reset()
+{
+  xhPrev_[0] = 0.0f;
+  xhPrev_[1] = 0.0f;
+}
+
+void
 CanonicalFilter::setCoefs(const FilterType filterType,
                           const float k,
                           const float q,

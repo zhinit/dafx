@@ -15,6 +15,7 @@ public:
   void setCutoffFreq(float freq);
   void setQ(float q);
   void setFilterType(FilterType filterType);
+  void resetFilter();
 
 private:
   float sampleRate_ = 44'100.0f;

@@ -24,6 +24,12 @@ public:
                    float q,
                    FilterType filterType);
 
+  void reset();
+
+private:
+  float sampleRate_ = 44100.0f;
+  std::vector<float> xhPrev_ = { 0.0f, 0.0f };
+
   void setCoefs(const FilterType filterType,
                 const float k,
                 const float q,
@@ -32,8 +38,4 @@ public:
                 float& b2,
                 float& a1,
                 float& a2);
-
-private:
-  float sampleRate_ = 44100.0f;
-  std::vector<float> xhPrev_ = { 0.0f, 0.0f };
 };
