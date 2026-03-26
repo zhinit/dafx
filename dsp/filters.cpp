@@ -69,12 +69,12 @@ CanonicalFilter::setCoefs(const FilterType filterType,
       break;
     case BR:
       b0 = (q * (1.0f + k * k)) / denom;
-      b1 = 2.0f * b0;
+      b1 = (2.0f * q * (k * k - 1.0f)) / denom;
       b2 = b0;
       break;
     case AP:
       b0 = (k * k * q - k + q) / denom;
-      b1 = (2.0f * q * (k * k - 1.0f));
+      b1 = (2.0f * q * (k * k - 1.0f)) / denom;
       b2 = 1.0f;
       break;
   }
