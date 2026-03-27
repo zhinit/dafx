@@ -3,6 +3,10 @@
 #include "./constants.h"
 #include <cmath>
 
+// -------------------------
+// Canonical Filter
+// --------------------------
+
 void
 CanonicalFilter::prepare(float sampleRate)
 {
@@ -85,4 +89,57 @@ CanonicalFilter::setCoefs(const FilterType filterType,
       b2 = 1.0f;
       break;
   }
+}
+
+// -------------------------
+// State Varaible Filter
+// --------------------------
+
+void
+StateVariableFilter::prepare(float sampleRate)
+{
+  sampleRate_ = sampleRate;
+}
+
+void
+StateVariableFilter::applyFilter(float* left,
+                                 float* right,
+                                 size_t blockSize,
+                                 float cutoff,
+                                 float q,
+                                 FilterType filterType)
+{
+  float outputHp = 0.0f;
+  float outputBp = 0.0f;
+  float outputLp = 0.0f;
+
+  q = std::max(0.51f, q);
+  float q1 = 1.0f / q;
+  float f1 = 2.0f * std::sin(PI * cutoff / sampleRate_);
+  f1 = std::max(0.0f, std::min(2 - q1, f1));
+
+  for (size_t i = 0; i < blockSize; ++i) {
+    outputHp = left[i] - outputLpPrev_ - q1 * outputBpPrev_;
+    outputBp = f1 * outputHp + outputBpPrev_;
+    outputLp = f1 * outputBp + outputLpPrev_;
+
+    outputBpPrev_ = outputBp;
+    outputLpPrev_ = outputLp;
+
+    if (filterType == HP) {
+      left[i] = outputHp;
+    } else if (filterType == BP) {
+      left[i] = outputBp;
+    } else {
+      left[i] = outputLp;
+    }
+    right[i] = left[i];
+  }
+}
+
+void
+StateVariableFilter::reset()
+{
+  outputBpPrev_ = 0.0f;
+  outputLpPrev_ = 0.0f;
 }

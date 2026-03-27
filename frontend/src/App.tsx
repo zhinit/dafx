@@ -107,8 +107,8 @@ function App() {
       <input
         type="range"
         className="filter-slider"
-        min="0.3"
-        max="3"
+        min="0.51"
+        max="5"
         step="0.01"
         onInput={handleQSlider}
       />

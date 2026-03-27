@@ -39,3 +39,23 @@ private:
                 float& a1,
                 float& a2);
 };
+
+class StateVariableFilter
+{
+public:
+  void prepare(float sampleRate);
+
+  void applyFilter(float* left,
+                   float* right,
+                   size_t blockSize,
+                   float cutoff,
+                   float q,
+                   FilterType filterType);
+
+  void reset();
+
+private:
+  float sampleRate_ = 44100.0f;
+  float outputLpPrev_ = 0.0f;
+  float outputBpPrev_ = 0.0f;
+};

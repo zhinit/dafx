@@ -23,7 +23,8 @@ private:
   float phase_ = 0;
   bool isPlaying_ = false;
 
-  CanonicalFilter filter_;
+  // CanonicalFilter filter_;
+  StateVariableFilter filter_;
   float cutoffFreq_ = 350.0f;
   float q_ = 0.707f;
   FilterType filterType_;
