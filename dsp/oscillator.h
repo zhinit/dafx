@@ -19,7 +19,7 @@ public:
 
 private:
   float sampleRate_ = 44'100.0f;
-  float freq_ = 220.0f;
+  float freq_ = 110.0f;
   float phase_ = 0;
   bool isPlaying_ = false;
 
@@ -28,4 +28,6 @@ private:
   float cutoffFreq_ = 350.0f;
   float q_ = 0.707f;
   FilterType filterType_;
+
+  float polyBlep(float dt, float t);
 };

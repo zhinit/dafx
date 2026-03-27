@@ -23,6 +23,7 @@ Oscillator::process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize)
 
   for (size_t i = 0; i < blockSize; ++i) {
     float sample = 1 - 2 * phase_;
+    sample += polyBlep(1.0f / sampleRate_ * freq_, phase_);
     left[i] = sample;
     right[i] = sample;
 
@@ -32,6 +33,19 @@ Oscillator::process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize)
   }
 
   filter_.applyFilter(left, right, blockSize, cutoffFreq_, q_, filterType_);
+}
+
+float
+Oscillator::polyBlep(float dt, float t)
+{
+  if (t < dt) {
+    t /= dt;
+    return t + t - t * t - 1.0f;
+  } else if (t > 1.0f - dt) {
+    t = (t - 1.0f) / dt;
+    return t * t + t + t + 1.0;
+  }
+  return 0.0f;
 }
 
 void
