@@ -29,5 +29,7 @@ private:
   float q_ = 0.707f;
   FilterType filterType_;
 
+  StateVariableFilter antiAliasFilter_;
+
   float polyBlep(float dt, float t);
 };

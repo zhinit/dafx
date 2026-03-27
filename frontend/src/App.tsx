@@ -58,9 +58,9 @@ function App() {
   };
 
   const convertAmtToFreq = (amt: number) => {
-    // note 2^14.3 ~= 20,000Hz
+    // note 2^13.5 ~= 11,500Hz
     // 2^0 = 1Hz
-    return 2 ** (amt * 14.3) + 10.0;
+    return 2 ** (amt * 13.5) + 10.0;
   };
 
   const handleFreqSlider = (e) => {

@@ -5,6 +5,7 @@ Oscillator::prepare(float sampleRate)
 {
   sampleRate_ = sampleRate;
   filter_.prepare(sampleRate_);
+  antiAliasFilter_.prepare(sampleRate_ * 2.0f);
 }
 
 void
@@ -21,15 +22,24 @@ Oscillator::process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize)
     return;
   }
 
-  for (size_t i = 0; i < blockSize; ++i) {
+  std::vector<float> overSampled(blockSize * 2);
+
+  for (size_t i = 0; i < blockSize * 2; ++i) {
     float sample = 1 - 2 * phase_;
     sample += polyBlep(1.0f / sampleRate_ * freq_, phase_);
-    left[i] = sample;
-    right[i] = sample;
+    overSampled[i] = sample;
 
-    phase_ += 1.0f / sampleRate_ * freq_;
+    phase_ += 1.0f / (sampleRate_ * 2) * freq_;
     if (phase_ >= 1.0f)
       phase_ -= 1.0f;
+  }
+
+  antiAliasFilter_.applyFilter(
+    overSampled.data(), overSampled.data(), blockSize * 2, 20000, 0.707, LP);
+
+  for (size_t i = 0; i < blockSize; ++i) {
+    left[i] = overSampled[i * 2];
+    right[i] = left[i];
   }
 
   filter_.applyFilter(left, right, blockSize, cutoffFreq_, q_, filterType_);
