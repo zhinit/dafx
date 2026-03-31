@@ -17,7 +17,17 @@ class DSPProcessor extends AudioWorkletProcessor {
       const module = await createDSPModule();
       this.module = module;
       this.engine = new module.Oscillator();
-      this.engine.prepare(sampleRate);
+
+      this.engine.prepare(sampleRate, 2);
+
+      this.heapBufferLeft = this.module._malloc(128 * 4);
+      this.heapBufferRight = this.module._malloc(128 * 4);
+
+      this.channelPtrsPtr = this.module._malloc(2 * 4);
+      const HEAPU32 = new Uint32Array(this.module.HEAPF32.buffer);
+      HEAPU32[this.channelPtrsPtr / 4] = this.heapBufferLeft;
+      HEAPU32[this.channelPtrsPtr / 4 + 1] = this.heapBufferRight;
+
       this.port.postMessage({ type: "ready" });
       return;
     }
@@ -48,14 +58,7 @@ class DSPProcessor extends AudioWorkletProcessor {
     const rightOutput = outputs[0][1];
     const numSamples = leftOutput.length;
 
-    if (!this.heapBufferLeft || this.heapBufferLeft.length < numSamples) {
-      if (this.heapBufferLeft) this.module._free(this.heapBufferLeft);
-      if (this.heapBufferRight) this.module._free(this.heapBufferRight);
-      this.heapBufferLeft = this.module._malloc(numSamples * 4);
-      this.heapBufferRight = this.module._malloc(numSamples * 4);
-    }
-
-    this.engine.process(this.heapBufferLeft, this.heapBufferRight, 128);
+    this.engine.process(this.channelPtrsPtr, 128);
 
     const wasmLeft = new Float32Array(
       this.module.HEAPF32.buffer,

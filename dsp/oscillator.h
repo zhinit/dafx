@@ -6,9 +6,9 @@
 class Oscillator
 {
 public:
-  void prepare(float sampleRate);
+  void prepare(float sampleRate, size_t numChannels);
 
-  void process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize);
+  void process(uintptr_t channelPointers, size_t blockSize);
 
   void setIsPlaying(bool isPlaying);
   void setFreq(float freq);
@@ -19,8 +19,9 @@ public:
 
 private:
   float sampleRate_ = 44'100.0f;
+  size_t numChannels_ = 2;
   float freq_ = 110.0f;
-  float phase_ = 0;
+  float phase_ = 0.0f;
   bool isPlaying_ = false;
 
   // CanonicalFilter filter_;

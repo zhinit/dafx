@@ -1,23 +1,25 @@
 #include "./oscillator.h"
 
 void
-Oscillator::prepare(float sampleRate)
+Oscillator::prepare(float sampleRate, size_t numChannels)
 {
   sampleRate_ = sampleRate;
+  numChannels_ = numChannels;
+
   filter_.prepare(sampleRate_);
   antiAliasFilter_.prepare(sampleRate_ * 2.0f);
 }
 
 void
-Oscillator::process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize)
+Oscillator::process(uintptr_t channelPointers, size_t blockSize)
 {
-  float* left = reinterpret_cast<float*>(leftPtr);
-  float* right = reinterpret_cast<float*>(rightPtr);
+  float** channels = reinterpret_cast<float**>(channelPointers);
 
   if (!isPlaying_) {
-    for (size_t i = 0; i < blockSize; ++i) {
-      left[i] = 0.0f;
-      right[i] = 0.0f;
+    for (size_t ch = 0; ch < numChannels_; ch++) {
+      for (size_t i = 0; i < blockSize; ++i) {
+        channels[ch][i] = 0.0f;
+      }
     }
     return;
   }
@@ -37,12 +39,13 @@ Oscillator::process(uintptr_t leftPtr, uintptr_t rightPtr, size_t blockSize)
   antiAliasFilter_.applyFilter(
     overSampled.data(), overSampled.data(), blockSize * 2, 20000, 0.707, LP);
 
-  for (size_t i = 0; i < blockSize; ++i) {
-    left[i] = overSampled[i * 2];
-    right[i] = left[i];
+  for (size_t ch = 0; ch < numChannels_; ch++) {
+    for (size_t i = 0; i < blockSize; ++i) {
+      channels[ch][i] = overSampled[i * 2];
+    }
   }
 
-  filter_.applyFilter(left, right, blockSize, cutoffFreq_, q_, filterType_);
+  // filter_.applyFilter(left, right, blockSize, cutoffFreq_, q_, filterType_);
 }
 
 float
