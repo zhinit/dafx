@@ -102,8 +102,7 @@ StateVariableFilter::prepare(float sampleRate)
 }
 
 void
-StateVariableFilter::applyFilter(float* left,
-                                 float* right,
+StateVariableFilter::applyFilter(float* channel,
                                  size_t blockSize,
                                  float cutoff,
                                  float q,
@@ -119,7 +118,7 @@ StateVariableFilter::applyFilter(float* left,
   f1 = std::max(0.0f, std::min(2 - q1, f1));
 
   for (size_t i = 0; i < blockSize; ++i) {
-    outputHp = left[i] - outputLpPrev_ - q1 * outputBpPrev_;
+    outputHp = channel[i] - outputLpPrev_ - q1 * outputBpPrev_;
     outputBp = f1 * outputHp + outputBpPrev_;
     outputLp = f1 * outputBp + outputLpPrev_;
 
@@ -127,13 +126,12 @@ StateVariableFilter::applyFilter(float* left,
     outputLpPrev_ = outputLp;
 
     if (filterType == HP) {
-      left[i] = outputHp;
+      channel[i] = outputHp;
     } else if (filterType == BP) {
-      left[i] = outputBp;
+      channel[i] = outputBp;
     } else {
-      left[i] = outputLp;
+      channel[i] = outputLp;
     }
-    right[i] = left[i];
   }
 }
 

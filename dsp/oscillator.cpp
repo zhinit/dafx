@@ -6,7 +6,12 @@ Oscillator::prepare(float sampleRate, size_t numChannels)
   sampleRate_ = sampleRate;
   numChannels_ = numChannels;
 
-  filter_.prepare(sampleRate_);
+  for (size_t ch = 0; ch < numChannels_; ++ch) {
+    StateVariableFilter filter;
+    filter.prepare(sampleRate_);
+    filters_.push_back(filter);
+  }
+
   antiAliasFilter_.prepare(sampleRate_ * 2.0f);
 }
 
@@ -37,7 +42,7 @@ Oscillator::process(uintptr_t channelPointers, size_t blockSize)
   }
 
   antiAliasFilter_.applyFilter(
-    overSampled.data(), overSampled.data(), blockSize * 2, 20000, 0.707, LP);
+    overSampled.data(), blockSize * 2, 20000, 0.707, LP);
 
   for (size_t ch = 0; ch < numChannels_; ch++) {
     for (size_t i = 0; i < blockSize; ++i) {
@@ -45,7 +50,9 @@ Oscillator::process(uintptr_t channelPointers, size_t blockSize)
     }
   }
 
-  // filter_.applyFilter(left, right, blockSize, cutoffFreq_, q_, filterType_);
+  for (size_t ch = 0; ch < numChannels_; ch++)
+    filters_[ch].applyFilter(
+      channels[ch], blockSize, cutoffFreq_, q_, filterType_);
 }
 
 float
@@ -94,5 +101,7 @@ Oscillator::setFilterType(FilterType filterType)
 void
 Oscillator::resetFilter()
 {
-  filter_.reset();
+  for (size_t ch = 0; ch < numChannels_; ++ch) {
+    filters_[ch].reset();
+  }
 }
