@@ -1,5 +1,4 @@
 #include "filters.h"
-
 #include "./constants.h"
 #include <cmath>
 
@@ -14,8 +13,7 @@ CanonicalFilter::prepare(float sampleRate)
 }
 
 void
-CanonicalFilter::applyFilter(float* left,
-                             float* right,
+CanonicalFilter::applyFilter(float* channel,
                              size_t blockSize,
                              float cutoff,
                              float q,
@@ -30,11 +28,8 @@ CanonicalFilter::applyFilter(float* left,
 
   for (size_t i = 0; i < blockSize; ++i) {
     // apply filter formula
-    xh[i] = left[i] - a1 * xhPrev_[0] - a2 * xhPrev_[1];
-    left[i] = b0 * xh[i] + b1 * xhPrev_[0] + b2 * xhPrev_[1];
-
-    // for now lets just assume mono CHANGE LATER
-    right[i] = left[i];
+    xh[i] = channel[i] - a1 * xhPrev_[0] - a2 * xhPrev_[1];
+    channel[i] = b0 * xh[i] + b1 * xhPrev_[0] + b2 * xhPrev_[1];
 
     // save history
     xhPrev_[1] = xhPrev_[0];

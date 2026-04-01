@@ -24,8 +24,8 @@ private:
   float phase_ = 0.0f;
   bool isPlaying_ = false;
 
-  // CanonicalFilter filter_;
-  std::vector<StateVariableFilter> filters_;
+  std::vector<CanonicalFilter> filters_;
+  // std::vector<StateVariableFilter> filters_;
   float cutoffFreq_ = 350.0f;
   float q_ = 0.707f;
   FilterType filterType_;

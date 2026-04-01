@@ -7,7 +7,8 @@ Oscillator::prepare(float sampleRate, size_t numChannels)
   numChannels_ = numChannels;
 
   for (size_t ch = 0; ch < numChannels_; ++ch) {
-    StateVariableFilter filter;
+    CanonicalFilter filter;
+    // StateVariableFilter filter;
     filter.prepare(sampleRate_);
     filters_.push_back(filter);
   }

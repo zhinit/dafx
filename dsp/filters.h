@@ -17,8 +17,7 @@ class CanonicalFilter
 public:
   void prepare(float sampleRate);
 
-  void applyFilter(float* left,
-                   float* right,
+  void applyFilter(float* channel,
                    size_t blockSize,
                    float cutoff,
                    float q,
