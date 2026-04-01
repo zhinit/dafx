@@ -7,26 +7,26 @@
 // --------------------------
 
 void
-CanonicalFilter::prepare(float sampleRate)
+CanonicalFilter::prepare(float sampleRate, size_t blockSize)
 {
   sampleRate_ = sampleRate;
+  blockSize_ = blockSize;
 }
 
 void
 CanonicalFilter::applyFilter(float* channel,
-                             size_t blockSize,
                              float cutoff,
                              float q,
                              FilterType filterType)
 {
-  std::vector<float> xh(blockSize, 0.0f);
+  std::vector<float> xh(blockSize_, 0.0f);
 
   float k = std::tan(PI * cutoff / sampleRate_);
 
   float b0, b1, b2, a1, a2;
   setCoefs(filterType, k, q, b0, b1, b2, a1, a2);
 
-  for (size_t i = 0; i < blockSize; ++i) {
+  for (size_t i = 0; i < blockSize_; ++i) {
     // apply filter formula
     xh[i] = channel[i] - a1 * xhPrev_[0] - a2 * xhPrev_[1];
     channel[i] = b0 * xh[i] + b1 * xhPrev_[0] + b2 * xhPrev_[1];
@@ -91,14 +91,14 @@ CanonicalFilter::setCoefs(const FilterType filterType,
 // --------------------------
 
 void
-StateVariableFilter::prepare(float sampleRate)
+StateVariableFilter::prepare(float sampleRate, size_t blockSize)
 {
   sampleRate_ = sampleRate;
+  blockSize_ = blockSize;
 }
 
 void
 StateVariableFilter::applyFilter(float* channel,
-                                 size_t blockSize,
                                  float cutoff,
                                  float q,
                                  FilterType filterType)
@@ -112,7 +112,7 @@ StateVariableFilter::applyFilter(float* channel,
   float f1 = 2.0f * std::sin(PI * cutoff / sampleRate_);
   f1 = std::max(0.0f, std::min(2 - q1, f1));
 
-  for (size_t i = 0; i < blockSize; ++i) {
+  for (size_t i = 0; i < blockSize_; ++i) {
     outputHp = channel[i] - outputLpPrev_ - q1 * outputBpPrev_;
     outputBp = f1 * outputHp + outputBpPrev_;
     outputLp = f1 * outputBp + outputLpPrev_;

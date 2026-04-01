@@ -15,10 +15,9 @@ enum FilterType
 class CanonicalFilter
 {
 public:
-  void prepare(float sampleRate);
+  void prepare(float sampleRate, size_t blockSize);
 
   void applyFilter(float* channel,
-                   size_t blockSize,
                    float cutoff,
                    float q,
                    FilterType filterType);
@@ -27,6 +26,8 @@ public:
 
 private:
   float sampleRate_ = 44100.0f;
+  size_t blockSize_ = 128;
+
   std::vector<float> xhPrev_ = { 0.0f, 0.0f };
 
   void setCoefs(const FilterType filterType,
@@ -42,10 +43,9 @@ private:
 class StateVariableFilter
 {
 public:
-  void prepare(float sampleRate);
+  void prepare(float sampleRate, size_t blockSize);
 
   void applyFilter(float* channel,
-                   size_t blockSize,
                    float cutoff,
                    float q,
                    FilterType filterType);
@@ -54,6 +54,7 @@ public:
 
 private:
   float sampleRate_ = 44100.0f;
+  size_t blockSize_ = 128;
   float outputLpPrev_ = 0.0f;
   float outputBpPrev_ = 0.0f;
 };

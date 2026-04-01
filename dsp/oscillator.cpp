@@ -5,7 +5,7 @@ Oscillator::prepare(float sampleRate, size_t blockSize)
 {
   sampleRate_ = sampleRate;
   blockSize_ = blockSize;
-  antiAliasFilter_.prepare(sampleRate_ * 2.0f);
+  antiAliasFilter_.prepare(sampleRate_ * 2.0f, blockSize_ * 2);
 }
 
 void
@@ -23,8 +23,7 @@ Oscillator::process(float* channel)
       phase_ -= 1.0f;
   }
 
-  antiAliasFilter_.applyFilter(
-    overSampled.data(), blockSize_ * 2, 20000, 0.707, LP);
+  antiAliasFilter_.applyFilter(overSampled.data(), 20000, 0.707, LP);
 
   for (size_t i = 0; i < blockSize_; ++i) {
     channel[i] = overSampled[i * 2];
