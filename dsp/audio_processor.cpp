@@ -9,6 +9,7 @@ AudioProcessor::prepare(float sampleRate, size_t numChannels, size_t blockSize)
 
   for (size_t ch = 0; ch < numChannels_; ++ch) {
     Oscillator oscillator;
+    oscillator.prepare(sampleRate_, blockSize_);
     oscillators_.push_back(oscillator);
 
     CanonicalFilter filter;
@@ -33,7 +34,7 @@ AudioProcessor::process(uintptr_t channelPointers)
   }
 
   for (size_t ch = 0; ch < numChannels_; ch++) {
-    oscillators_[ch].process(channels[ch], blockSize_);
+    oscillators_[ch].process(channels[ch]);
     filters_[ch].applyFilter(
       channels[ch], blockSize_, cutoffFreq_, q_, filterType_);
   }

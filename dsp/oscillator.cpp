@@ -1,18 +1,19 @@
 #include "./oscillator.h"
 
 void
-Oscillator::prepare(float sampleRate)
+Oscillator::prepare(float sampleRate, size_t blockSize)
 {
   sampleRate_ = sampleRate;
+  blockSize_ = blockSize;
   antiAliasFilter_.prepare(sampleRate_ * 2.0f);
 }
 
 void
-Oscillator::process(float* channel, size_t blockSize)
+Oscillator::process(float* channel)
 {
-  std::vector<float> overSampled(blockSize * 2);
+  std::vector<float> overSampled(blockSize_ * 2);
 
-  for (size_t i = 0; i < blockSize * 2; ++i) {
+  for (size_t i = 0; i < blockSize_ * 2; ++i) {
     float sample = 1 - 2 * phase_;
     sample += polyBlep(1.0f / sampleRate_ * freq_, phase_);
     overSampled[i] = sample;
@@ -23,9 +24,9 @@ Oscillator::process(float* channel, size_t blockSize)
   }
 
   antiAliasFilter_.applyFilter(
-    overSampled.data(), blockSize * 2, 20000, 0.707, LP);
+    overSampled.data(), blockSize_ * 2, 20000, 0.707, LP);
 
-  for (size_t i = 0; i < blockSize; ++i) {
+  for (size_t i = 0; i < blockSize_; ++i) {
     channel[i] = overSampled[i * 2];
   }
 }
