@@ -58,3 +58,18 @@ private:
   float outputLpPrev_ = 0.0f;
   float outputBpPrev_ = 0.0f;
 };
+
+class AllPassFilter
+{
+public:
+  void prepare(float sampleRate, size_t blockSize);
+
+  void applyFilter(float* channel, float cutoff);
+
+  void reset();
+
+private:
+  float sampleRate_ = 44100.0f;
+  size_t blockSize_ = 128;
+  float xhPrev_ = 0.0f;
+};

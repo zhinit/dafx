@@ -19,7 +19,6 @@ CanonicalFilter::applyFilter(float* channel,
                              float q,
                              FilterType filterType)
 {
-  std::vector<float> xh(blockSize_, 0.0f);
 
   float k = std::tan(PI * cutoff / sampleRate_);
 
@@ -28,12 +27,12 @@ CanonicalFilter::applyFilter(float* channel,
 
   for (size_t i = 0; i < blockSize_; ++i) {
     // apply filter formula
-    xh[i] = channel[i] - a1 * xhPrev_[0] - a2 * xhPrev_[1];
-    channel[i] = b0 * xh[i] + b1 * xhPrev_[0] + b2 * xhPrev_[1];
+    float xh = channel[i] - a1 * xhPrev_[0] - a2 * xhPrev_[1];
+    channel[i] = b0 * xh + b1 * xhPrev_[0] + b2 * xhPrev_[1];
 
     // save history
     xhPrev_[1] = xhPrev_[0];
-    xhPrev_[0] = xh[i];
+    xhPrev_[0] = xh;
   }
 }
 
@@ -135,4 +134,29 @@ StateVariableFilter::reset()
 {
   outputBpPrev_ = 0.0f;
   outputLpPrev_ = 0.0f;
+}
+
+void
+AllPassFilter::prepare(float sampleRate, size_t blockSize)
+{
+  sampleRate_ = sampleRate;
+  blockSize_ = blockSize;
+}
+
+void
+AllPassFilter::applyFilter(float* channel, float cutoff)
+{
+  float c = (std::tan(PI * cutoff / sampleRate_) - 1.0f) /
+            (std::tan(PI * cutoff / sampleRate_) + 1.0f);
+
+  for (size_t i = 0; i < blockSize_; ++i) {
+    float xh = channel[i] - c * xhPrev_;
+    channel[i] = c * xh + xhPrev_;
+  }
+}
+
+void
+AllPassFilter::reset()
+{
+  xhPrev_ = 0.0f;
 }
