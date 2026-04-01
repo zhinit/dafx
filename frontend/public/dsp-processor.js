@@ -18,7 +18,7 @@ class DSPProcessor extends AudioWorkletProcessor {
       this.module = module;
       this.engine = new module.AudioProcessor();
 
-      this.engine.prepare(sampleRate, 2);
+      this.engine.prepare(sampleRate, 2, 128);
 
       this.heapBufferLeft = this.module._malloc(128 * 4);
       this.heapBufferRight = this.module._malloc(128 * 4);
@@ -58,7 +58,7 @@ class DSPProcessor extends AudioWorkletProcessor {
     const rightOutput = outputs[0][1];
     const numSamples = leftOutput.length;
 
-    this.engine.process(this.channelPtrsPtr, 128);
+    this.engine.process(this.channelPtrsPtr);
 
     const wasmLeft = new Float32Array(
       this.module.HEAPF32.buffer,

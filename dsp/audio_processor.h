@@ -7,9 +7,9 @@
 class AudioProcessor
 {
 public:
-  void prepare(float sampleRate, size_t numChannels);
+  void prepare(float sampleRate, size_t numChannels, size_t blockSize);
 
-  void process(uintptr_t channelPointers, size_t blockSize);
+  void process(uintptr_t channelPointers);
 
   void setIsPlaying(bool isPlaying);
   void setFreq(float freq);
@@ -20,6 +20,7 @@ public:
 
 private:
   float sampleRate_ = 44'100.0f;
+  size_t blockSize_ = 128;
   size_t numChannels_ = 2;
   float freq_ = 110.0f;
   float phase_ = 0.0f;

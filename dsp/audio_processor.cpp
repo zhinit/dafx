@@ -1,10 +1,11 @@
 #include "./audio_processor.h"
 
 void
-AudioProcessor::prepare(float sampleRate, size_t numChannels)
+AudioProcessor::prepare(float sampleRate, size_t numChannels, size_t blockSize)
 {
   sampleRate_ = sampleRate;
   numChannels_ = numChannels;
+  blockSize_ = blockSize;
 
   for (size_t ch = 0; ch < numChannels_; ++ch) {
     Oscillator oscillator;
@@ -18,13 +19,13 @@ AudioProcessor::prepare(float sampleRate, size_t numChannels)
 }
 
 void
-AudioProcessor::process(uintptr_t channelPointers, size_t blockSize)
+AudioProcessor::process(uintptr_t channelPointers)
 {
   float** channels = reinterpret_cast<float**>(channelPointers);
 
   if (!isPlaying_) {
     for (size_t ch = 0; ch < numChannels_; ch++) {
-      for (size_t i = 0; i < blockSize; ++i) {
+      for (size_t i = 0; i < blockSize_; ++i) {
         channels[ch][i] = 0.0f;
       }
     }
@@ -32,9 +33,9 @@ AudioProcessor::process(uintptr_t channelPointers, size_t blockSize)
   }
 
   for (size_t ch = 0; ch < numChannels_; ch++) {
-    oscillators_[ch].process(channels[ch], blockSize);
+    oscillators_[ch].process(channels[ch], blockSize_);
     filters_[ch].applyFilter(
-      channels[ch], blockSize, cutoffFreq_, q_, filterType_);
+      channels[ch], blockSize_, cutoffFreq_, q_, filterType_);
   }
 }
 
