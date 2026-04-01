@@ -16,7 +16,7 @@ class DSPProcessor extends AudioWorkletProcessor {
       const createDSPModule = fn();
       const module = await createDSPModule();
       this.module = module;
-      this.engine = new module.Oscillator();
+      this.engine = new module.AudioProcessor();
 
       this.engine.prepare(sampleRate, 2);
 

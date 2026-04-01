@@ -1,4 +1,4 @@
-#include "oscillator.h"
+#include "audio_processor.h"
 #include <emscripten/bind.h>
 
 EMSCRIPTEN_BINDINGS(dsp_module)
@@ -9,13 +9,13 @@ EMSCRIPTEN_BINDINGS(dsp_module)
     .value("BP", BP)
     .value("BR", BR)
     .value("AP", AP);
-  emscripten::class_<Oscillator>("Oscillator")
+  emscripten::class_<AudioProcessor>("AudioProcessor")
     .constructor()
-    .function("prepare", &Oscillator::prepare)
-    .function("setIsPlaying", &Oscillator::setIsPlaying)
-    .function("process", &Oscillator::process)
-    .function("setCutoffFreq", &Oscillator::setCutoffFreq)
-    .function("setQ", &Oscillator::setQ)
-    .function("setFilterType", &Oscillator::setFilterType)
-    .function("resetFilter", &Oscillator::resetFilter);
+    .function("prepare", &AudioProcessor::prepare)
+    .function("setIsPlaying", &AudioProcessor::setIsPlaying)
+    .function("process", &AudioProcessor::process)
+    .function("setCutoffFreq", &AudioProcessor::setCutoffFreq)
+    .function("setQ", &AudioProcessor::setQ)
+    .function("setFilterType", &AudioProcessor::setFilterType)
+    .function("resetFilter", &AudioProcessor::resetFilter);
 }

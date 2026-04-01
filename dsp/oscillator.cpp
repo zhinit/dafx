@@ -1,35 +1,15 @@
 #include "./oscillator.h"
 
 void
-Oscillator::prepare(float sampleRate, size_t numChannels)
+Oscillator::prepare(float sampleRate)
 {
   sampleRate_ = sampleRate;
-  numChannels_ = numChannels;
-
-  for (size_t ch = 0; ch < numChannels_; ++ch) {
-    CanonicalFilter filter;
-    // StateVariableFilter filter;
-    filter.prepare(sampleRate_);
-    filters_.push_back(filter);
-  }
-
   antiAliasFilter_.prepare(sampleRate_ * 2.0f);
 }
 
 void
-Oscillator::process(uintptr_t channelPointers, size_t blockSize)
+Oscillator::process(float* channel, size_t blockSize)
 {
-  float** channels = reinterpret_cast<float**>(channelPointers);
-
-  if (!isPlaying_) {
-    for (size_t ch = 0; ch < numChannels_; ch++) {
-      for (size_t i = 0; i < blockSize; ++i) {
-        channels[ch][i] = 0.0f;
-      }
-    }
-    return;
-  }
-
   std::vector<float> overSampled(blockSize * 2);
 
   for (size_t i = 0; i < blockSize * 2; ++i) {
@@ -45,15 +25,9 @@ Oscillator::process(uintptr_t channelPointers, size_t blockSize)
   antiAliasFilter_.applyFilter(
     overSampled.data(), blockSize * 2, 20000, 0.707, LP);
 
-  for (size_t ch = 0; ch < numChannels_; ch++) {
-    for (size_t i = 0; i < blockSize; ++i) {
-      channels[ch][i] = overSampled[i * 2];
-    }
+  for (size_t i = 0; i < blockSize; ++i) {
+    channel[i] = overSampled[i * 2];
   }
-
-  for (size_t ch = 0; ch < numChannels_; ch++)
-    filters_[ch].applyFilter(
-      channels[ch], blockSize, cutoffFreq_, q_, filterType_);
 }
 
 float
@@ -70,39 +44,7 @@ Oscillator::polyBlep(float dt, float t)
 }
 
 void
-Oscillator::setIsPlaying(bool isPlaying)
-{
-  isPlaying_ = isPlaying;
-}
-
-void
 Oscillator::setFreq(float freq)
 {
   freq_ = freq;
-}
-
-void
-Oscillator::setCutoffFreq(float freq)
-{
-  cutoffFreq_ = freq;
-}
-
-void
-Oscillator::setQ(float q)
-{
-  q_ = q;
-}
-
-void
-Oscillator::setFilterType(FilterType filterType)
-{
-  filterType_ = filterType;
-}
-
-void
-Oscillator::resetFilter()
-{
-  for (size_t ch = 0; ch < numChannels_; ++ch) {
-    filters_[ch].reset();
-  }
 }

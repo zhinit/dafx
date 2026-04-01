@@ -5,7 +5,7 @@ set (CMAKE_CXX_STANDARD 20)
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(dsp-wasm bindings.cpp oscillator.cpp filters.cpp)
+add_executable(dsp-wasm audio_processor.cpp bindings.cpp oscillator.cpp filters.cpp)
 
 target_link_options(
   dsp-wasm
