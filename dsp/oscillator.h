@@ -16,6 +16,8 @@ private:
   float freq_ = 110.0f;
   float phase_ = 0.0f;
 
+  std::vector<float> overSampledBuffer;
+
   StateVariableFilter antiAliasFilter_;
 
   float polyBlep(float dt, float t);
