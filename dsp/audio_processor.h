@@ -28,8 +28,9 @@ private:
 
   std::vector<Oscillator> oscillators_;
 
-  std::vector<CanonicalFilter> filters_;
+  // std::vector<CanonicalFilter> filters_;
   // std::vector<StateVariableFilter> filters_;
+  std::vector<AllPassFilter> filters_;
   float cutoffFreq_ = 350.0f;
   float q_ = 0.707f;
   FilterType filterType_;

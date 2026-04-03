@@ -28,7 +28,7 @@ private:
   float sampleRate_ = 44100.0f;
   size_t blockSize_ = 128;
 
-  std::vector<float> xhPrev_ = { 0.0f, 0.0f };
+  std::vector<float> xhPrev_{ 2, 0.0f };
 
   void setCoefs(const FilterType filterType,
                 const float k,
@@ -71,5 +71,5 @@ public:
 private:
   float sampleRate_ = 44100.0f;
   size_t blockSize_ = 128;
-  float xhPrev_ = 0.0f;
+  std::vector<float> xhPrev_{ 2, 0.0f };
 };

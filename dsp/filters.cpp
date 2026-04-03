@@ -149,14 +149,19 @@ AllPassFilter::applyFilter(float* channel, float cutoff)
   float c = (std::tan(PI * cutoff / sampleRate_) - 1.0f) /
             (std::tan(PI * cutoff / sampleRate_) + 1.0f);
 
+  float d = -std::cos(TAU * cutoff / sampleRate_);
+
   for (size_t i = 0; i < blockSize_; ++i) {
-    float xh = channel[i] - c * xhPrev_;
-    channel[i] = c * xh + xhPrev_;
+    float xh = channel[i] - d * (1 - c) * xhPrev_[0] + c * xhPrev_[1];
+    channel[i] = -c * xh + d * (1 - c) * xhPrev_[0] + xhPrev_[1];
+    xhPrev_[1] = xhPrev_[0];
+    xhPrev_[0] = xh;
   }
 }
 
 void
 AllPassFilter::reset()
 {
-  xhPrev_ = 0.0f;
+  xhPrev_[0] = 0.0f;
+  xhPrev_[1] = 0.0f;
 }

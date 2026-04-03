@@ -12,8 +12,9 @@ AudioProcessor::prepare(float sampleRate, size_t numChannels, size_t blockSize)
     oscillator.prepare(sampleRate_, blockSize_);
     oscillators_.push_back(oscillator);
 
-    CanonicalFilter filter;
+    // CanonicalFilter filter;
     // StateVariableFilter filter;
+    AllPassFilter filter;
     filter.prepare(sampleRate_, blockSize_);
     filters_.push_back(filter);
   }
@@ -35,7 +36,8 @@ AudioProcessor::process(uintptr_t channelPointers)
 
   for (size_t ch = 0; ch < numChannels_; ch++) {
     oscillators_[ch].process(channels[ch]);
-    filters_[ch].applyFilter(channels[ch], cutoffFreq_, q_, filterType_);
+    // filters_[ch].applyFilter(channels[ch], cutoffFreq_, q_, filterType_);
+    filters_[ch].applyFilter(channels[ch], cutoffFreq_);
   }
 }
 
